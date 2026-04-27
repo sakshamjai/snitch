@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hook/useAuth';
 import { useNavigate } from 'react-router';
+import ContinueWithGoogle from '../components/ContinueWithGoogle';
 
 const inputClass =
   'bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 text-sm text-[#e5e2e1] placeholder-[#3a342a] w-full outline-none transition-all duration-200 focus:border-[#b8860b] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]';
@@ -177,7 +178,7 @@ const Login = () => {
                 >
                   Sign In
                 </button>
-
+                <ContinueWithGoogle />
                 {/* Register link */}
                 <p className="text-center text-[12px] text-[#5a5048] mt-1">
                   Don't have an account?{' '}

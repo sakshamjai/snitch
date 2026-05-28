@@ -6,9 +6,11 @@ import passport from 'passport';
 const router = Router();
 router.post('/register', validateRegisterUser, registerUser);
 router.post('/login', validateLoginUser, loginUser);
-router.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/callback', passport.authenticate('google',
-        {session: false,
-        failureRedirect: config.NODE_ENV === 'development' ? 'http://localhost:5173/login' : '/login'}),
+        {
+                session: false,
+                failureRedirect: config.NODE_ENV === 'development' ? 'http://localhost:5173/login' : '/login'
+        }),
         googleCallback);
 export default router;

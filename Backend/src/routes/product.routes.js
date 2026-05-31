@@ -1,5 +1,5 @@
 import express from 'express';
-import { createProduct } from '../controllers/product.controller.js';
+import { createProduct, getSellerProducts } from '../controllers/product.controller.js';
 import { createProductValidator} from '../validator/product.validator.js';
 import authenticateSeller from '../middlewares/auth.middleware.js';
 import multer, { memoryStorage } from 'multer';
@@ -11,4 +11,5 @@ const upload = multer({
 })
 const router = express.Router();
 router.post('/', authenticateSeller, upload.array('images', 7), createProductValidator ,createProduct);
+router.get("/seller", authenticateSeller, getSellerProducts);
 export default router;

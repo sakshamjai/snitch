@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
-import { userProduct } from '../hook/useProduct';
+import { useProduct } from '../hook/useProduct';
 
 const inputClass =
   'bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 text-sm text-[#e5e2e1] placeholder-[#3a342a] w-full outline-none transition-all duration-200 focus:border-[#b8860b] focus:shadow-[0_0_0_3px_rgba(184,134,11,0.1)]';
@@ -10,7 +10,7 @@ const labelClass =
 
 const CreateProduct = () => {
   const navigate = useNavigate();
-  const { handleCreateProduct } = userProduct();
+  const { handleCreateProduct } = useProduct();
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({

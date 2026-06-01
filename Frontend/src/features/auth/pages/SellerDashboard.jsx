@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { userProduct } from '../hook/useProduct';
+import { useProduct } from '../hook/useProduct';
 
 const SellerDashboard = () => {
-  const { handleGetSellerProducts } = userProduct();
+  const { handleGetSellerProducts } = useProduct();
   const products = useSelector((state) => state.product.sellerProducts);
-
+  console.log("Getting products from state.");
   useEffect(() => {
     handleGetSellerProducts();
   }, []);

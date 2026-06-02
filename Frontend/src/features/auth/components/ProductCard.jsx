@@ -7,7 +7,7 @@ const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,' + btoa(`
 </svg>
 `);
 
-const ProductCard = ({ product, index = 0 }) => {
+const ProductCard = ({ product, index = 0, onClick }) => {
   const { title, description, price, images } = product;
   const imageUrl = images && images.length > 0 ? images[0].url : PLACEHOLDER_IMAGE;
   const hasImage = images && images.length > 0;
@@ -20,6 +20,7 @@ const ProductCard = ({ product, index = 0 }) => {
 
   return (
     <div
+      onClick = {onClick}
       className="group flex flex-col opacity-0 animate-fade-in-up"
       style={{ animationDelay: `${(index % 8) * 80}ms` }}
     >

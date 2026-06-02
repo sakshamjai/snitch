@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import { useProduct } from '../hook/useProduct.js';
 import Navbar from '../components/Navbar.jsx';
 import ProductCard from '../components/ProductCard.jsx';
+import { useNavigate } from 'react-router';
 
 const Home = () => {
   const products = useSelector((state) => state.product.products);
   const { handleGetAllProducts } = useProduct();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -33,13 +35,13 @@ const Home = () => {
         {/* Section Header */}
         <div className="shrink-0 px-5 sm:px-8 lg:px-12 xl:px-16 pt-6 pb-4 sm:pt-8 sm:pb-5 flex items-end justify-between gap-4">
           <div>
-            <h1 className="font-['Playfair_Display'] text-2xl sm:text-3xl lg:text-[34px] font-semibold text-white leading-tight tracking-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-semibold text-white leading-tight tracking-tight">
               All Products
             </h1>
-            <div className="w-10 h-px bg-[#b8860b] mt-2" />
+            <div className="w-50 h-[5px] bg-[#b8860b] mt-2" />
           </div>
           {!loading && products && products.length > 0 && (
-            <span className="text-[11px] text-[#6b6560] tracking-wider uppercase shrink-0">
+            <span className="text-[15px] text-[#6b6560] font-bold tracking-wider uppercase shrink-0">
               {products.length} {products.length === 1 ? 'item' : 'items'}
             </span>
           )}
@@ -60,7 +62,13 @@ const Home = () => {
           ) : products && products.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
               {products.map((product, index) => (
-                <ProductCard key={product._id} product={product} index={index} />
+                <ProductCard key={product._id} product={product} index={index}
+                onClick = {
+                  () => {
+                    navigate(`/product/${product._id}`);
+                  }
+                }
+                />
               ))}
             </div>
           ) : (

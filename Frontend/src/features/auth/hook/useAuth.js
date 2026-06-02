@@ -20,7 +20,7 @@ export const useAuth = () => {
       dispatch(setUser(data.user));
     }
     catch(error){
-      dispatch(setError(error));
+      dispatch(setError(error.message));
 
     }
     finally{

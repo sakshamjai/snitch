@@ -25,13 +25,11 @@ const ProductCard = ({ product, index = 0, onClick }) => {
       style={{ animationDelay: `${(index % 8) * 80}ms` }}
     >
       {/* Image */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#111111] rounded mb-2.5 sm:mb-3 border border-[#2a2a2a]/20">
+      <div className="relative aspect-[3/4]  bg-[#111111] rounded mb-2.5 sm:mb-3 border border-[#2a2a2a]/20">
         <img
           src={imageUrl}
           alt={title}
-          className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.04] ${
-            hasImage ? 'object-cover' : 'object-contain'
-          }`}
+          className={`w-full h-full transition-transform duration-500 ease-out group-hover:scale-[1.04] object-contain`}
           loading="lazy"
         />
         {/* Hover overlay */}

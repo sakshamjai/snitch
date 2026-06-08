@@ -134,7 +134,7 @@ const ProductDetail = () => {
                 <img
                   src={currentImage}
                   alt={product.title}
-                  className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.03] ${
+                  className={`w-full h-full object-contain transition-all duration-500 ease-out group-hover:scale-[1.03] ${
                     imageTransition ? 'opacity-0 scale-[0.98]' : 'opacity-100 scale-100'
                   }`}
                 />
@@ -193,7 +193,7 @@ const ProductDetail = () => {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-row gap-3 sm:gap-4 pt-1 sm:pt-2">
+              <div className="flex flex-row gap-3 sm:gap-4 p-1 md:p-2 sm:p-2">
                 <button
                   className="flex-1 px-4 sm:px-6 py-3 sm:py-3.5 md:py-4 border border-[#b8860b] text-[#c9a84c] font-bold text-xs sm:text-sm uppercase tracking-[0.12em] sm:tracking-[0.15em] hover:bg-[#b8860b]/5 active:scale-[0.98] transition-all cursor-pointer"
                 >

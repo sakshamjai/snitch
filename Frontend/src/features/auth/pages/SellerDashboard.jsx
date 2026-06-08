@@ -73,7 +73,7 @@ const SellerDashboard = () => {
                 <ProductCard key={product._id} product={product} index={index}
                 onClick = {
                   () => {
-                    navigate(`/product/${product._id}`);
+                    navigate(`/seller/product/${product._id}`);
                   }
                 }
                 />

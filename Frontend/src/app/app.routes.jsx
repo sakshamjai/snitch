@@ -6,6 +6,7 @@ import SellerDashboard from '../features/auth/pages/SellerDashboard';
 import Home from '../features/auth/pages/Home';
 import Protected from '../features/auth/components/Protected';
 import ProductDetail from '../features/auth/pages/ProductDetail';
+import SellerProductDetail from '../features/auth/pages/SellerProductDetail';
 
 export const router = createBrowserRouter([
     {
@@ -33,6 +34,12 @@ export const router = createBrowserRouter([
                 path: '/seller/dashboard',
                 element: <Protected role = 'seller'>
                     <SellerDashboard />
+                </Protected>
+            },
+            {
+                path: '/seller/product/:productId',
+                element: <Protected role = 'seller'>
+                    <SellerProductDetail />
                 </Protected>
             }
         ]

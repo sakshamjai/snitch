@@ -12,9 +12,11 @@ const formatPrice = (amount, currency) => {
  * Props:
  * - variant: { images, attributes, price, stock }
  * - index: number
+ * - isSelected: boolean — highlights this card as the active variant
+ * - onSelect: (index) => void — called when card is clicked
  * - onStockChange: (index, newStock) => void
  */
-const VariantCard = ({ variant, index, onStockChange }) => {
+const VariantCard = ({ variant, index, isSelected = false, onSelect, onStockChange }) => {
   const thumbUrl = variant.images?.[0]?.url || null;
   const attributes = variant.attributes || {};
 
@@ -24,11 +26,30 @@ const VariantCard = ({ variant, index, onStockChange }) => {
     : Object.entries(attributes);
 
   return (
-    <div className="bg-[#111111] border border-[#2a2a2a] rounded-lg flex flex-col group hover:border-[#3a3a3a] transition-all duration-200 hover:shadow-[0_0_20px_rgba(184,134,11,0.04)]">
+    <div
+      onClick={() => onSelect?.(index)}
+      className={`
+        relative bg-[#111111] border rounded-lg flex flex-col
+        cursor-pointer transition-all duration-200
+        ${isSelected
+          ? 'border-[#b8860b] shadow-[0_0_0_1px_rgba(184,134,11,0.4),0_0_24px_rgba(184,134,11,0.12)]'
+          : 'border-[#2a2a2a] hover:border-[#3a3a3a] hover:shadow-[0_0_20px_rgba(184,134,11,0.04)]'
+        }
+      `}
+    >
+      {/* Active selection ring indicator (top edge) */}
+      {isSelected && (
+        <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-lg bg-gradient-to-r from-[#b8860b]/60 via-[#c9a84c] to-[#b8860b]/60" />
+      )}
+
       {/* Top — Thumbnail + Attributes + Price */}
       <div className="p-4 sm:p-5 flex gap-4">
         {/* Variant thumbnail */}
-        <div className="w-14 h-[70px] sm:w-16 sm:h-20 bg-[#1a1a1a] border border-[#2a2a2a]/40 rounded overflow-hidden shrink-0">
+        <div className={`w-14 h-[70px] sm:w-16 sm:h-20 rounded overflow-hidden shrink-0 transition-all duration-200 ${
+          isSelected
+            ? 'border-2 border-[#b8860b]/60 bg-[#1a1a1a]'
+            : 'border border-[#2a2a2a]/40 bg-[#1a1a1a]'
+        }`}>
           {thumbUrl ? (
             <img src={thumbUrl} alt="Variant" className="w-full h-full object-cover" />
           ) : (
@@ -48,25 +69,41 @@ const VariantCard = ({ variant, index, onStockChange }) => {
               {attributeEntries.map(([key, val]) => (
                 <span
                   key={key}
-                  className="bg-[#1a1a1a] border border-[#2a2a2a]/50 px-2 py-0.5 rounded text-[9px] uppercase tracking-wider text-[#e5e2e1]/70 font-medium"
+                  className={`px-2 py-0.5 rounded text-[9px] uppercase tracking-wider font-medium transition-colors duration-200 ${
+                    isSelected
+                      ? 'bg-[#b8860b]/10 border border-[#b8860b]/25 text-[#c9a84c]/90'
+                      : 'bg-[#1a1a1a] border border-[#2a2a2a]/50 text-[#e5e2e1]/70'
+                  }`}
                 >
-                  <span className="text-[#6b6560]">{key}:</span> {val}
+                  <span className={isSelected ? 'text-[#b8860b]/70' : 'text-[#6b6560]'}>{key}:</span> {val}
                 </span>
               ))}
             </div>
           )}
 
           {/* Price */}
-          <p className="text-sm text-[#c9a84c] font-semibold">
+          <p className={`text-sm font-semibold transition-colors duration-200 ${isSelected ? 'text-[#c9a84c]' : 'text-[#c9a84c]'}`}>
             {variant.price?.amount
               ? formatPrice(variant.price.amount, variant.price.currency)
               : 'Base Price'}
           </p>
+
+          {/* Selected label */}
+          {isSelected && (
+            <p className="text-[9px] uppercase tracking-[0.15em] text-[#b8860b] font-bold mt-1.5">
+              ● Active
+            </p>
+          )}
         </div>
       </div>
 
       {/* Bottom — Stock input */}
-      <div className="mt-auto border-t border-[#2a2a2a]/40 bg-[#0e0e0e] rounded-b-lg px-4 sm:px-5 py-3 flex items-center justify-between">
+      <div
+        onClick={(e) => e.stopPropagation()} // don't trigger card select when editing stock
+        className={`mt-auto border-t rounded-b-lg px-4 sm:px-5 py-3 flex items-center justify-between transition-colors duration-200 ${
+          isSelected ? 'border-[#b8860b]/20 bg-[#0e0e0e]' : 'border-[#2a2a2a]/40 bg-[#0e0e0e]'
+        }`}
+      >
         <label className="text-[9px] uppercase tracking-[0.15em] font-bold text-[#6b6560]">
           Stock
         </label>
@@ -74,7 +111,9 @@ const VariantCard = ({ variant, index, onStockChange }) => {
           type="number"
           value={variant.stock || 0}
           onChange={(e) => onStockChange(index, e.target.value)}
-          className="w-20 bg-transparent border-b border-[#2a2a2a] py-1 text-right focus:outline-none focus:border-[#b8860b] text-[#e5e2e1] text-base font-semibold transition-colors"
+          className={`w-20 bg-transparent border-b py-1 text-right focus:outline-none text-[#e5e2e1] text-base font-semibold transition-colors ${
+            isSelected ? 'border-[#b8860b]/40 focus:border-[#b8860b]' : 'border-[#2a2a2a] focus:border-[#b8860b]'
+          }`}
           min="0"
         />
       </div>

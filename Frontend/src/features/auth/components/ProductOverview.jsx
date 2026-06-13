@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,' + btoa(`
 <svg width="600" height="750" xmlns="http://www.w3.org/2000/svg">
@@ -18,17 +18,35 @@ const formatPrice = (amount, currency) => {
  * 
  * Props:
  * - product: { title, description, price: { amount, currency }, images: [{ url }] }
- * - compact: boolean — when true, renders a compact layout suited for a sidebar/left-pane
+ * - selectedVariant: variant object | null — when set, overrides images & price
+ * - compact: boolean — sidebar/left-pane layout
  */
-const ProductOverview = ({ product, compact = false }) => {
+const ProductOverview = ({ product, selectedVariant = null, compact = false }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [imageTransition, setImageTransition] = useState(false);
 
-  const images = product?.images?.length > 0
-    ? product.images
+  // ── Derived display values (variant overrides base product) ──
+  const displayImages =
+    selectedVariant?.images?.length > 0 ? selectedVariant.images : product?.images;
+  const displayPrice =
+    selectedVariant?.price?.amount ? selectedVariant.price : product?.price;
+  const isVariantActive = selectedVariant !== null;
+
+  const images = displayImages?.length > 0
+    ? displayImages
     : [{ url: PLACEHOLDER_IMAGE, _id: 'placeholder' }];
 
   const currentImage = images[selectedImage]?.url || PLACEHOLDER_IMAGE;
+
+  // Reset to first image whenever the variant (or base) changes
+  useEffect(() => {
+    setImageTransition(true);
+    const t = setTimeout(() => {
+      setSelectedImage(0);
+      setImageTransition(false);
+    }, 200);
+    return () => clearTimeout(t);
+  }, [selectedVariant]);
 
   const handleImageSelect = (index) => {
     if (index === selectedImage) return;
@@ -87,13 +105,27 @@ const ProductOverview = ({ product, compact = false }) => {
 
         {/* Product info */}
         <div className="flex flex-col gap-2 shrink-0 pt-1">
+          {/* Variant active indicator */}
+          {isVariantActive && (
+            <div className="flex items-center gap-2 mb-1">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#b8860b]/10 border border-[#b8860b]/20 text-[#c9a84c] text-[9px] uppercase tracking-[0.15em] font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#c9a84c] animate-pulse" />
+                Viewing Variant
+              </span>
+            </div>
+          )}
           {/* Title */}
           <h1 className="font-['Playfair_Display'] text-2xl xl:text-3xl font-extrabold text-white leading-tight tracking-tight">
             {product.title}
           </h1>
           {/* Price */}
           <p className="text-[#c9a84c] text-xl xl:text-2xl font-bold tracking-tight">
-            {formatPrice(product.price?.amount, product.price?.currency)}
+            {formatPrice(displayPrice?.amount, displayPrice?.currency)}
+            {isVariantActive && displayPrice?.amount !== product.price?.amount && (
+              <span className="ml-2 text-xs text-[#6b6560] font-normal line-through">
+                {formatPrice(product.price?.amount, product.price?.currency)}
+              </span>
+            )}
           </p>
           {/* Description */}
           <p className="text-xs sm:text-sm text-[#6b6560] leading-relaxed font-medium line-clamp-4">
@@ -162,7 +194,7 @@ const ProductOverview = ({ product, compact = false }) => {
         </h1>
 
         <p className="text-[#c9a84c] text-xl sm:text-2xl lg:text-[28px] font-bold tracking-tight">
-          {formatPrice(product.price?.amount, product.price?.currency)}
+          {formatPrice(displayPrice?.amount, displayPrice?.currency)}
         </p>
 
         <p className="text-sm sm:text-base text-[#6b6560] leading-relaxed font-medium max-w-lg">

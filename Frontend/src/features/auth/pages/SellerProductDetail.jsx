@@ -11,6 +11,10 @@ const SellerProductDetail = () => {
   const [localVariants, setLocalVariants] = useState([]);
   const [isAddingVariant, setIsAddingVariant] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(null);
+
+  // Derived — null means show base product data
+  const selectedVariant = selectedVariantIdx !== null ? localVariants[selectedVariantIdx] ?? null : null;
 
   const { productId } = useParams();
   const navigate = useNavigate();
@@ -24,6 +28,7 @@ const SellerProductDetail = () => {
       if (fetchedProduct?.variants) {
         setLocalVariants(fetchedProduct.variants);
       }
+      setSelectedVariantIdx(null); // reset selection on fresh fetch
     } catch (error) {
       console.error('Failed to fetch product details:', error);
     } finally {
@@ -44,7 +49,12 @@ const SellerProductDetail = () => {
   const handleSaveVariant = async (variantData) => {
     await handleAddProductVariant(productId, variantData);
     setIsAddingVariant(false);
-    await fetchProductDetails();
+    await fetchProductDetails(); // also resets selectedVariantIdx inside
+  };
+
+  const handleVariantSelect = (idx) => {
+    // Toggle off if clicking the already-selected variant
+    setSelectedVariantIdx(prev => (prev === idx ? null : idx));
   };
 
   // ─── Loading Skeleton ───
@@ -117,29 +127,48 @@ const SellerProductDetail = () => {
         {/* ── LEFT PANE — Product Overview (desktop only) ── */}
         <aside className="hidden lg:flex flex-col w-[42%] xl:w-[40%] border-r border-[#1e1e1e] overflow-y-auto">
           <div className="p-6 xl:p-8 flex-1">
-            <ProductOverview product={product} compact />
+            <ProductOverview product={product} selectedVariant={selectedVariant} compact />
           </div>
         </aside>
 
         {/* ── RIGHT PANE — Variants & Inventory ── */}
         <main className="flex-1 flex flex-col overflow-hidden">
 
-          {/* Mobile: product summary strip */}
+          {/* Mobile: product summary strip (reflects selected variant) */}
           <div className="lg:hidden px-4 sm:px-6 pt-4 pb-3 border-b border-[#1e1e1e] flex items-center gap-3 shrink-0">
-            {product.images?.[0]?.url && (
-              <img
-                src={product.images[0].url}
-                alt={product.title}
-                className="w-10 h-12 object-cover rounded border border-[#2a2a2a]"
-              />
-            )}
-            <div className="min-w-0">
-              <h1 className="text-sm font-bold text-white truncate">{product.title}</h1>
-              <p className="text-xs text-[#c9a84c] font-semibold mt-0.5">
-                {product.price?.currency === 'INR' ? '₹' : product.price?.currency}
-                {product.price?.amount?.toLocaleString('en-IN')}
-              </p>
-            </div>
+            {(() => {
+              const mobileImg = selectedVariant?.images?.[0]?.url || product.images?.[0]?.url;
+              const mobilePrice = selectedVariant?.price?.amount ? selectedVariant.price : product.price;
+              return (
+                <>
+                  {mobileImg && (
+                    <img
+                      src={mobileImg}
+                      alt={product.title}
+                      className="w-10 h-12 object-cover rounded border border-[#2a2a2a] transition-all duration-300"
+                    />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <h1 className="text-sm font-bold text-white truncate">{product.title}</h1>
+                    <p className="text-xs text-[#c9a84c] font-semibold mt-0.5">
+                      {mobilePrice?.currency === 'INR' ? '₹' : mobilePrice?.currency}
+                      {mobilePrice?.amount?.toLocaleString('en-IN')}
+                      {selectedVariant && (
+                        <span className="ml-1.5 text-[9px] uppercase tracking-wider text-[#b8860b] font-bold">Variant</span>
+                      )}
+                    </p>
+                  </div>
+                  {selectedVariant && (
+                    <button
+                      onClick={() => setSelectedVariantIdx(null)}
+                      className="text-[#6b6560] hover:text-[#e5e2e1] text-[9px] uppercase tracking-wider font-bold transition-colors cursor-pointer shrink-0"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </>
+              );
+            })()}
           </div>
 
           {/* Scrollable variants area */}
@@ -203,6 +232,8 @@ const SellerProductDetail = () => {
                     key={variant._id || idx}
                     variant={variant}
                     index={idx}
+                    isSelected={selectedVariantIdx === idx}
+                    onSelect={handleVariantSelect}
                     onStockChange={handleStockChange}
                   />
                 ))}

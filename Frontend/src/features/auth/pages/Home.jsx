@@ -38,7 +38,7 @@ const Home = () => {
             <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-semibold text-white leading-tight tracking-tight">
               All Products
             </h1>
-            <div className="w-50 h-[5px] bg-[#b8860b] mt-2" />
+            <div className="w-32 md:w-50 h-[5px] bg-[#b8860b] mt-2" />
           </div>
           {!loading && products && products.length > 0 && (
             <span className="text-[15px] text-[#6b6560] font-bold tracking-wider uppercase shrink-0">

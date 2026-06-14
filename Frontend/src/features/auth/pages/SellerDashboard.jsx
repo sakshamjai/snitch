@@ -38,7 +38,7 @@ const SellerDashboard = () => {
             <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-semibold text-white leading-tight tracking-tight">
               Your Products
             </h1>
-            <div className="w-50 h-[5px] bg-[#b8860b] mt-2" />
+            <div className="w-32 md:w-50 h-[5px] bg-[#b8860b] mt-2" />
           </div>
           <div className="flex items-center gap-4 sm:gap-6 shrink-0">
             {!loading && products && products.length > 0 && (

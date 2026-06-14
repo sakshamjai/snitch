@@ -21,11 +21,11 @@ const ProductCard = ({ product, index = 0, onClick }) => {
   return (
     <div
       onClick = {onClick}
-      className="group flex flex-col opacity-0 animate-fade-in-up"
+      className="group flex flex-col opacity-0 animate-fade-in-up h-full"
       style={{ animationDelay: `${(index % 8) * 80}ms` }}
     >
       {/* Image */}
-      <div className="relative aspect-[3/4]  bg-[#111111] rounded mb-2.5 sm:mb-3 border border-[#2a2a2a]/20">
+      <div className="relative aspect-[3/4]  bg-[#111111] rounded mb-2.5 sm:mb-3 border border-[#2a2a2a]/20 h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px]">
         <img
           src={imageUrl}
           alt={title}

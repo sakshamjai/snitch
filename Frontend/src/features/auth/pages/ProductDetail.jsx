@@ -279,7 +279,7 @@ const ProductDetail = () => {
             </div>
 
             {/* ── Right: Product Information ── */}
-            <div className="flex flex-col gap-3 sm:gap-4 md:gap-5 lg:gap-6 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="flex flex-col gap-3 sm:gap-4 md:gap-5 lg:gap-6 animate-fade-in-up p-2" style={{ animationDelay: '100ms' }}>
 
               {/* Product Title */}
               <h1 className="font-['Playfair_Display'] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[56px] font-extrabold text-white leading-[1.1] tracking-tight">

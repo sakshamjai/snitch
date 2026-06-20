@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { useProduct } from '../hook/useProduct';
+import { useCart } from '../../cart/hook/useCart.js';
 import Navbar from '../components/Navbar';
 
 const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,' + btoa(`
@@ -67,6 +68,7 @@ const ProductDetail = () => {
   const [imageTransition, setImageTransition] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = useState({}); // { size: 'M', color: 'Black' }
   const { handleGetProductById } = useProduct();
+  const { handleAddItem } = useCart();
   const navigate = useNavigate();
 
   async function fetchProductDetail() {
@@ -375,6 +377,9 @@ const ProductDetail = () => {
               {/* ── Action Buttons ── */}
               <div className="flex flex-row gap-3 sm:gap-4 p-1 md:p-2 sm:p-2">
                 <button
+                  onClick = {() => {
+                    handleAddItem({productId: product._id, variantId: matchedVariant?._id})
+                  }}
                   disabled={isOutOfStock || (hasVariants && !allAttrsSelected)}
                   className={`
                     flex-1 px-4 sm:px-6 py-3 sm:py-3.5 md:py-4

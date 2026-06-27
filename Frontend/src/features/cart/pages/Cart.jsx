@@ -18,7 +18,7 @@ const formatPrice = (amount, currency = 'INR') => {
 };
 
 /* ── Cart Item Component ── */
-const CartItem = ({ item, index }) => {
+const CartItem = ({ item, index, handleIncrementCartItem }) => {
   const product = item.product;
   const imageUrl = product?.images?.[0]?.url || PLACEHOLDER_IMAGE;
   const title = product?.title || 'Untitled Product';
@@ -93,6 +93,9 @@ const CartItem = ({ item, index }) => {
               {item.quantity || 1}
             </span>
             <button
+              onClick = {() => {
+                handleIncrementCartItem();
+              }}
               className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center text-[#6b6560] hover:text-[#c9a84c] hover:bg-[#b8860b]/5 transition-all duration-200 cursor-pointer active:scale-90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#b8860b]"
               aria-label={`Increase quantity of ${title}`}
               id={`increment-${item._id}`}
@@ -129,7 +132,7 @@ const CartItem = ({ item, index }) => {
 /* ── Main Cart Page ── */
 const Cart = () => {
   const cartItems = useSelector(state => state.cart.items);
-  const { handleGetCart } = useCart();
+  const { handleGetCart, handleIncrementCartItem } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
@@ -280,7 +283,9 @@ const Cart = () => {
             {/* ── Cart Items List ── */}
             <div className="flex flex-col gap-3 sm:gap-4" id="cart-items-list">
               {cartItems.map((item, index) => (
-                <CartItem key={item._id} item={item} index={index} />
+                <CartItem key={item._id} item={item} index={index} handleIncrementCartItem = {() => {
+                  handleIncrementCartItem({productId: item.product._id, variantId: item.variant})
+                }} />
               ))}
             </div>
 

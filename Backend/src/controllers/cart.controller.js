@@ -26,7 +26,7 @@ export const addToCart = async (req, res) => {
     if(isProductAlreadyInCart){
         const quantityInCart = cart.items.find(item => item.product.toString() === productId && item.variant?.toString() === variantId).quantity;
         if(quantityInCart + quantity > stock){
-            return res.status(400).message({
+            return res.status(400).json({
                 message: `Only ${stock} of this product left in stock and you already have ${quantityInCart} items in your cart of this product.`,
                 success: false
             })
@@ -35,7 +35,7 @@ export const addToCart = async (req, res) => {
         await cartModel.findOneAndUpdate({
             user: req.user._id,
             "items.product": productId,
-            "items.product.variant": variantId
+            "items.variant": variantId
         },{
             $inc: {"items.$.quantity": quantity}
         },{

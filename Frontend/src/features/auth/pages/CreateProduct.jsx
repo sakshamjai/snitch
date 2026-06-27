@@ -106,27 +106,6 @@ const CreateProduct = () => {
   return (
     <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#0a0a0a] text-[#e5e2e1] flex flex-col">
 
-      {/* ── Navbar ── */}
-      <nav className="w-full z-50 shrink-0 flex justify-between items-center px-6 sm:px-10 lg:px-14 py-4 bg-[#0d0d0d]/80 backdrop-blur-xl border-b border-[#b8860b]/10">
-        <span className="text-xl sm:text-2xl font-black tracking-tight text-[#c9a84c] select-none">
-          SNITCH
-        </span>
-        <div className="flex items-center gap-6 sm:gap-8">
-          <a
-            href="/"
-            className="text-[10px] sm:text-[11px] uppercase tracking-widest font-medium text-[#e5e2e1]/50 hover:text-[#c9a84c] transition-colors duration-200"
-          >
-            Back to site
-          </a>
-          <a
-            href="/"
-            className="hidden sm:block text-[11px] uppercase tracking-widest font-medium text-[#e5e2e1]/50 hover:text-[#c9a84c] transition-colors duration-200"
-          >
-            Dashboard
-          </a>
-        </div>
-      </nav>
-
       {/* ── Body ── */}
       <div className="flex flex-1 lg:overflow-hidden">
 

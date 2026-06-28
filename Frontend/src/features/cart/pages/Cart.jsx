@@ -26,6 +26,7 @@ const CartItem = ({ item, index, handleIncrementCartItem }) => {
 
   // Find variant attributes for display
   const variant = product?.variants?.find(v => v._id === item.variant);
+  const variantPrice = variant?.price;
   const variantAttributes = variant?.attributes || {};
   const attributeEntries = variantAttributes instanceof Map
     ? Array.from(variantAttributes.entries())
@@ -75,6 +76,14 @@ const CartItem = ({ item, index, handleIncrementCartItem }) => {
             {formatPrice(price?.amount, price?.currency)}
           </span>
         </div>
+
+        {variantPrice.amount !== price.amount && (
+          variantPrice.amount < price.amount ? (
+            <span className = 'text-sm: font:bold text-green-700'>You will now get this at {formatPrice(variantPrice.amount, variantPrice.currency)} and save {formatPrice(price.amount - variantPrice.amount, variantPrice.currency)}</span>
+          ) : (
+            <span className = 'text-sm: font:bold text-red-700'>You will now get this at {formatPrice(variantPrice.amount, variantPrice.currency)} which is  {formatPrice(variantPrice.amount - price.amount, variantPrice.currency)} more.</span>
+          )
+        )}
 
         {/* Bottom Row: Quantity + Line Total */}
         <div className="flex items-center justify-between mt-3 sm:mt-2">

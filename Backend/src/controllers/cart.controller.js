@@ -59,7 +59,7 @@ export const addToCart = async (req, res) => {
         product: productId,
         variant: variantId,
         quantity,
-        price: product.price
+        price: product.variants.find(variant => variant._id.toString() === variantId)?.price || product.price
     })
 
     await cart.save();

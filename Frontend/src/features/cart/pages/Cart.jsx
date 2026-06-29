@@ -25,7 +25,7 @@ const CartItem = ({ item, index, handleIncrementCartItem }) => {
   const price = item.price || product?.price;
 
   // Find variant attributes for display
-  const variant = product?.variants?.find(v => v._id === item.variant);
+  const variant = product?.variants;
   const variantPrice = variant?.price;
   const variantAttributes = variant?.attributes || {};
   const attributeEntries = variantAttributes instanceof Map
@@ -140,7 +140,7 @@ const CartItem = ({ item, index, handleIncrementCartItem }) => {
 
 /* ── Main Cart Page ── */
 const Cart = () => {
-  const cartItems = useSelector(state => state.cart.items);
+  const cart = useSelector(state => state.cart);
   const { handleGetCart, handleIncrementCartItem } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -158,15 +158,7 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  // Calculate totals
-  const subtotal = cartItems.reduce((sum, item) => {
-    const amount = item.price?.amount || item.product?.price?.amount || 0;
-    const qty = item.quantity || 1;
-    return sum + amount * qty;
-  }, 0);
-
-  const currency = cartItems[0]?.price?.currency || cartItems[0]?.product?.price?.currency || 'INR';
-  const itemCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const itemCount = cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   // ── Loading Skeleton ──
   if (loading) {
@@ -216,7 +208,7 @@ const Cart = () => {
   }
 
   // ── Empty Cart State ──
-  if (!cartItems || cartItems.length === 0) {
+  if (!cart.items || cart.items.length === 0) {
     return (
       <div className="min-h-dvh flex flex-col bg-[#0a0a0a] text-[#e5e2e1]">
         <Navbar />
@@ -291,7 +283,7 @@ const Cart = () => {
 
             {/* ── Cart Items List ── */}
             <div className="flex flex-col gap-3 sm:gap-4" id="cart-items-list">
-              {cartItems.map((item, index) => (
+              {cart.items.map((item, index) => (
                 <CartItem key={item._id} item={item} index={index} handleIncrementCartItem = {() => {
                   handleIncrementCartItem({productId: item.product._id, variantId: item.variant})
                 }} />
@@ -312,7 +304,7 @@ const Cart = () => {
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-[#6b6560] font-medium">Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
-                  <span className="text-sm font-semibold text-[#e5e2e1]">{formatPrice(subtotal, currency)}</span>
+                  <span className="text-sm font-semibold text-[#e5e2e1]">{formatPrice(cart.totalPrice, cart.currency)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-[#6b6560] font-medium">Shipping</span>
@@ -327,7 +319,7 @@ const Cart = () => {
               <div className="flex justify-between items-baseline mb-6">
                 <span className="text-sm uppercase tracking-[0.12em] font-bold text-[#e5e2e1]">Total</span>
                 <span className="text-xl sm:text-2xl font-bold text-[#c9a84c] tracking-tight">
-                  {formatPrice(subtotal, currency)}
+                  {formatPrice(cart.totalPrice, cart.currency)}
                 </span>
               </div>
 
